@@ -1,0 +1,7 @@
+main.py
+pyproject.toml
+blogform.egg-info/PKG-INFO
+blogform.egg-info/SOURCES.txt
+blogform.egg-info/dependency_links.txt
+blogform.egg-info/requires.txt
+blogform.egg-info/top_level.txt

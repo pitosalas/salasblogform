@@ -1,0 +1,12 @@
+[project]
+name = "blogform"
+version = "0.1.0"
+description = "FastAPI web post form for Pelican"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn"
+]
+
+[tool.uv]
+# optional: can pin Python version or use cache settings here
