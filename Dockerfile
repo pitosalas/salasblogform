@@ -16,6 +16,9 @@ COPY pyproject.toml .
 # Install dependencies using uv into the system environment
 RUN uv pip install --system fastapi uvicorn python-multipart python-magic
 
+RUN apt-get update && apt-get install -y git curl unzip && \
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    
 # Copy the rest of your application code
 COPY . .
 
