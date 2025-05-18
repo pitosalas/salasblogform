@@ -50,7 +50,7 @@ async def submit(
     print(f"form submission: {title}, {content[:20]}..., ")
     
     # Validate inputs
-    date_str = datetime.now().strftime("%Y-%m-%d")
+    date_str = datetime.now().strftime("%Y-%m-%d %I:%M %p")
     filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.md"
     post_path = POST_DIR / filename
 
