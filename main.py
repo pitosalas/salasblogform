@@ -6,7 +6,7 @@
 # Last revised: 2025-05-16
 
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 from pathlib import Path
@@ -14,7 +14,8 @@ import os
 import subprocess
 import shutil
 import urllib.parse
-
+from fastapi.templating import Jinja2Templates
+from starlette.requests import Request
 
 app = FastAPI()
 
@@ -32,37 +33,25 @@ IMG_DIR.mkdir(parents=True, exist_ok=True)
 
 # Serve uploaded images
 app.mount("/images", StaticFiles(directory=IMG_DIR), name="images")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
-def show_form():
-    print("form shown")
-    return """
-        <form action="/submit" method="post" enctype="multipart/form-data">
-            <input name="title" placeholder="Title"><br>
-            <input name="slug" placeholder="Slug"><br>
-            <input name="tags" placeholder="Comma-separated tags"><br>
-            <textarea name="content" rows="10" cols="60" placeholder="Markdown content"></textarea><br>
-            <input type="file" name="image"><br>
-            <input type="submit">
-        </form>
-    """
-
+def show_form(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/submit")
 async def submit(
     title: str = Form(...),
-    slug: str = Form(...),
-    tags: str = Form(""),
     content: str = Form(...),
     image: UploadFile = File(None)
 ):
-    print(f"form submission: {title}, {slug}, {tags}, {content[:20]}..., ")
+    print(f"form submission: {title}, {content[:20]}..., ")
     
     # Validate inputs
     date_str = datetime.now().strftime("%Y-%m-%d")
-    tag_list = [t.strip() for t in tags.split(",") if t.strip()]
-    filename = f"{slug}.md"
+    filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.md"
     post_path = POST_DIR / filename
 
     # Save the image (if provided)
@@ -81,8 +70,6 @@ async def submit(
         "---",
         f"title: {title}",
         f"date: {date_str}",
-        f"tags: [{', '.join(tag_list)}]",
-        f"slug: {slug}",
         "---",
         "",
     ]
@@ -100,9 +87,7 @@ async def submit(
         commit_to_blog_repo(filename, post_content, image_data, image_filename)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Git commit failed: {e}")
-
-    return {"status": "ok", "message": f"Saved and published {filename}"}
-
+    return RedirectResponse(url="https://pitosalas.github.io/salasblog", status_code=303)
 
 def commit_to_blog_repo(filename: str, content: str, image_data=None, image_filename=None):
     token = os.getenv("GH_TOKEN")

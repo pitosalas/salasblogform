@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Salas Blog - Submit Post</title>
+  <link rel="stylesheet" href="/static/theme/css/main.css">
+</head>
+<body class="home">
+  <header id="banner" class="body">
+    <h1><a href="/">Salas Blog</a></h1>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/form">Submit Post</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="content" class="body">
+    <h1>Submit a New Post</h1>
+    <form action="/submit" method="post" enctype="multipart/form-data">
+        <p><input name="title" placeholder="Title" /></p>
+        <p><textarea name="content" rows="10" cols="60" placeholder="Markdown content"></textarea></p>
+        <p><input type="file" name="image" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+  </section>
+
+  <footer id="contentinfo" class="body">
+    <p>Proudly powered by FastAPI</p>
+  </footer>
+</body>
+</html>
