@@ -5,7 +5,8 @@ description = "FastAPI web post form for Pelican"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi",
-    "uvicorn"
+    "pelican>=4.11.0",
+    "uvicorn",
 ]
 
 [tool.uv]
