@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "FastAPI web post form for Pelican"
 requires-python = ">=3.12"
 dependencies = [
+    "annotated-types>=0.7.0",
     "fastapi",
-    "pelican>=4.11.0",
     "uvicorn",
 ]
 
